@@ -9,7 +9,7 @@ export default class AutorDAO {
 
     async init() {
         try {
-            const conexao = await conectar(); // retorna uma conexão
+            const conexao = await conectar(); 
             const sql = `
                 CREATE TABLE IF NOT EXISTS autor(
                     autor_codigo INT NOT NULL AUTO_INCREMENT,
@@ -27,8 +27,8 @@ export default class AutorDAO {
         if (autor instanceof Autor) {
             const sql = "INSERT INTO autores(autor_nome) VALUES(?)"; 
             const parametros = [autor.nome];
-            const conexao = await conectar(); // retorna uma conexão
-            const retorno = await conexao.execute(sql, parametros); // prepara e executa o SQL
+            const conexao = await conectar(); 
+            const retorno = await conexao.execute(sql, parametros); 
             autor.codigo = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }
@@ -38,8 +38,8 @@ export default class AutorDAO {
         if (autor instanceof Autor) {
             const sql = "UPDATE autores SET autor_nome = ? WHERE autor_codigo = ?"; 
             const parametros = [autor.nome, autor.codigo];
-            const conexao = await conectar(); // retorna uma conexão
-            await conexao.execute(sql, parametros); // prepara e executa o SQL
+            const conexao = await conectar();
+            await conexao.execute(sql, parametros); 
             global.poolConexoes.releaseConnection(conexao);
         }
     }
@@ -48,8 +48,8 @@ export default class AutorDAO {
         if (autor instanceof Autor) {
             const sql = "DELETE FROM autores WHERE autor_codigo = ?"; 
             const parametros = [autor.codigo];
-            const conexao = await conectar(); // retorna uma conexão
-            await conexao.execute(sql, parametros); // prepara e executa o SQL
+            const conexao = await conectar(); 
+            await conexao.execute(sql, parametros); 
             global.poolConexoes.releaseConnection(conexao);
         }
     }

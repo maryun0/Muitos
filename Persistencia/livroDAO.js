@@ -10,7 +10,7 @@ export default class LivroDAO {
 
     async init() {
         try {
-            const conexao = await conectar(); // Retorna uma conexão
+            const conexao = await conectar(); 
             const sql = `
                     CREATE TABLE IF NOT EXISTS livro(
                         livro_codigo INT NOT NULL AUTO_INCREMENT,
@@ -33,7 +33,7 @@ export default class LivroDAO {
             const sql = "INSERT INTO livro(livro_nome, livro_data, livro_qtde_estoque, autor_codigo) VALUES(?, ?, ?, ?)";
             const parametros = [livro.nome, livro.data, livro.qtdeEstoque, livro.autor.codigo];
             const conexao = await conectar();
-            const retorno = await conexao.execute(sql, parametros); // Prepara e executa o SQL
+            const retorno = await conexao.execute(sql, parametros); 
             livro.codigo = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }

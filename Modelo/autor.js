@@ -1,7 +1,7 @@
 import AutorDAO from "../Persistencia/autorDAO.js";
 
 export default class Livro {
-    // definição dos atributos privados
+    
     #codigo;
     #nome;
     
@@ -9,10 +9,10 @@ export default class Livro {
     constructor(codigo = 0, nome = '') {
         this.#codigo = codigo;
         this.#nome = nome;
-// chave estrangeira para o autor
+
     }
 
-    // métodos de acesso públicos
+   
 
     get codigo() {
         return this.#codigo;
@@ -31,16 +31,16 @@ export default class Livro {
     }
 
    
-    // override do método toJSON
+
     toJSON() {
         return {
             codigo: this.#codigo,
             nome: this.#nome,
- // inclui o código do autor
+
         };
     }
 
-    // camada de modelo acessa a camada de persistencia
+
     async gravar() {
         const autorDAO = new AutorDAO();
         await autorDAO.gravar(this);

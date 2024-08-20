@@ -10,7 +10,7 @@ export default class AutorCtrl {
             const nome = dados.nome;
             if (nome) {
                 const autor = new Autor(0, nome);
-                //resolver a promise
+                
                 autor.gravar().then(() => {
                     resposta.status(200).json({
                         "status": true,
@@ -48,7 +48,7 @@ export default class AutorCtrl {
             const nome = dados.nome;
             if (codigo && nome) {
                 const autor = new Autor(codigo, nome);
-                //resolver a promise
+              
                 autor.atualizar().then(() => {
                     resposta.status(200).json({
                         "status": true,
@@ -126,8 +126,7 @@ export default class AutorCtrl {
 
     consultar(requisicao, resposta) {
         resposta.type('application/json');
-        //express, por meio do controle de rotas, será
-        //preparado para esperar um termo de busca
+       
         let termo = requisicao.params.termo;
         if (!termo){
             termo = "";

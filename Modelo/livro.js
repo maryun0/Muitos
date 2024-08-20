@@ -2,7 +2,7 @@ import LivroDAO from "../Persistencia/livroDAO.js";
 import Autor from "./autor.js";
 
 export default class Livro {
-    // definição dos atributos privados
+    
     #codigo;
     #nome;
     #data;
@@ -17,7 +17,7 @@ export default class Livro {
         this.#autor = autor;
     }
 
-    // métodos de acesso públicos
+    
     get data() {
         return this.#data;
     }
@@ -59,18 +59,18 @@ export default class Livro {
         }
     }
 
-    // override do método toJSON
+    
     toJSON() {
         return {
             codigo: this.#codigo,
             nome: this.#nome,
             data: this.#data,
             qtdeEstoque: this.#qtdeEstoque,
-            autor: this.#autor.toJSON() // Garante que o autor seja representado como JSON
+            autor: this.#autor.toJSON() 
         };
     }
 
-    // camada de modelo acessa a camada de persistencia
+   
     async gravar() {
         const livroDAO = new LivroDAO();
         await livroDAO.gravar(this);

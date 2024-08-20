@@ -1,7 +1,7 @@
 import { Router } from "express";
 import AutorCtrl from "../Controle/autorCtrl.js";
 
-// Instancia o controlador de autores
+
 const autorCtrl = new AutorCtrl();
 const rotaAutor = new Router();
 
