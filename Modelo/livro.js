@@ -64,6 +64,8 @@ export default class Livro {
         return {
             codigo: this.#codigo,
             nome: this.#nome,
+            data: this.#data,
+            qtdeEstoque: this.#qtdeEstoque,
             autor: this.#autor.toJSON() // Garante que o autor seja representado como JSON
         };
     }

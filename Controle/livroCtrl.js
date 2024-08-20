@@ -53,7 +53,7 @@ export default class LivroCtrl {
             const qtdeEstoque = dados.qtdeEstoque;
             const autor_codigo = dados.autor.codigo;
 
-            if (nome && nome.length > 0 && data && qtdeEstoque > 0 && autor_codigo > 0) {
+            if (nome  && data > 0 && qtdeEstoque > 0 && autor_codigo > 0) {
                 const autor = new Autor(autor_codigo);
                 const livro = new Livro(0, nome, data, qtdeEstoque, autor);
                 
@@ -128,11 +128,11 @@ export default class LivroCtrl {
         }
         if (requisicao.method === "GET") {
             const livro = new Livro();
-            livro.consultar(termo).then((listaLivros) => {
+            livro.consultar(termo).then((listaLivro) => {
                 resposta.json(
                     {
                         status: true,
-                        listaLivros
+                        listaLivro
                     });
             })
                 .catch((erro) => {

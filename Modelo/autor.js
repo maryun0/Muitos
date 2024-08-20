@@ -1,15 +1,15 @@
-import LivroDAO from "../Persistencia/livroDAO.js";
+import AutorDAO from "../Persistencia/autorDAO.js";
 
 export default class Livro {
     // definição dos atributos privados
     #codigo;
     #nome;
-    #autorCodigo;
+    
 
-    constructor(codigo = 0, nome = '', autorCodigo = 0) {
+    constructor(codigo = 0, nome = '') {
         this.#codigo = codigo;
         this.#nome = nome;
-        this.#autorCodigo = autorCodigo; // chave estrangeira para o autor
+// chave estrangeira para o autor
     }
 
     // métodos de acesso públicos
@@ -30,45 +30,38 @@ export default class Livro {
         this.#nome = novoNome;
     }
 
-    get autorCodigo() {
-        return this.#autorCodigo;
-    }
-
-    set autorCodigo(novoAutorCodigo) {
-        this.#autorCodigo = novoAutorCodigo;
-    }
-
+   
     // override do método toJSON
     toJSON() {
         return {
             codigo: this.#codigo,
             nome: this.#nome,
-            autorCodigo: this.#autorCodigo // inclui o código do autor
+ // inclui o código do autor
         };
     }
 
     // camada de modelo acessa a camada de persistencia
     async gravar() {
-        const livroDAO = new LivroDAO();
-        await livroDAO.gravar(this);
+        const autorDAO = new AutorDAO();
+        await autorDAO.gravar(this);
     }
 
     async excluir() {
-        const livroDAO = new LivroDAO();
-        await livroDAO.excluir(this);
+        const autorDAO = new AutorDAO();
+        await autorDAO.excluir(this);
     }
 
     async atualizar() {
-        const livroDAO = new LivroDAO();
-        await livroDAO.atualizar(this);
+        const autorDAO = new AutorDAO();
+        await autorDAO.atualizar(this);
     }
 
     async consultar(parametro) {
-        const livroDAO = new LivroDAO();
-        return await livroDAO.consultar(parametro);
+        const autorDAO = new AutorDAO();
+        return await autorDAO.consultar(parametro);
     }
-    async possuiLivros() {
-        const livroDAO = new LivroDAO();
-        return await livroDAO.possuiLivros(this);
+    async possuiLivro() {
+        const autorDAO = new AutorDAO();
+        return await autorDAO.possuiLivro(this);
     }
 }

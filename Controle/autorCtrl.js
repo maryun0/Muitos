@@ -11,7 +11,7 @@ export default class AutorCtrl {
             if (nome) {
                 const autor = new Autor(0, nome);
                 //resolver a promise
-                categoria.gravar().then(() => {
+                autor.gravar().then(() => {
                     resposta.status(200).json({
                         "status": true,
                         "codigoGerado": autor.codigo,
@@ -47,9 +47,9 @@ export default class AutorCtrl {
             const codigo = dados.codigo;
             const nome = dados.nome;
             if (codigo && nome) {
-                const categoria = new Categoria(codigo, nome);
+                const autor = new Autor(codigo, nome);
                 //resolver a promise
-                categoria.atualizar().then(() => {
+                autor.atualizar().then(() => {
                     resposta.status(200).json({
                         "status": true,
                         "mensagem": "Autor atualizada com sucesso!"
@@ -86,7 +86,7 @@ export default class AutorCtrl {
                 const autor = new Autor(codigo);
                 autor.possuiLivros().then(resposta =>{
                     if (resposta == false){
-                        categoria.excluir().then(() => {
+                        autor.excluir().then(() => {
                             resposta.status(200).json({
                                 "status": true,
                                 "mensagem": "Autor excluída com sucesso!"
@@ -134,11 +134,11 @@ export default class AutorCtrl {
         }
         if (requisicao.method === "GET"){
             const autor = new Autor();
-            categoria.consultar(termo).then((listaAutores)=>{
+            autor.consultar(termo).then((listaAutor)=>{
                 resposta.json(
                     {
                         status:true,
-                        listaAutores
+                        listaAutor
                     });
             })
             .catch((erro)=>{

@@ -11,10 +11,10 @@ export default class AutorDAO {
         try {
             const conexao = await conectar(); // retorna uma conexão
             const sql = `
-                CREATE TABLE IF NOT EXISTS autores(
+                CREATE TABLE IF NOT EXISTS autor(
                     autor_codigo INT NOT NULL AUTO_INCREMENT,
                     autor_nome VARCHAR(100) NOT NULL,
-                    CONSTRAINT pk_autor PRIMARY KEY(autor_codigo)
+                    PRIMARY KEY(autor_codigo)
                 );`;
             await conexao.execute(sql);
             await conexao.release();
@@ -71,14 +71,14 @@ export default class AutorDAO {
 
         const conexao = await conectar();
         const [registros, campos] = await conexao.execute(sql, parametros);
-        let listaAutores = [];
+        let listaAutor = [];
         for (const registro of registros) {
             const autor = new Autor(registro.autor_codigo, registro.autor_nome);
-            listaAutores.push(autor);
+            listaAutor.push(autor);
         }
-        return listaAutores;
+        return listaAutor;
     }
-    async possuiLivros(autor) {
+    async possuiLivro(autor) {
         if (autor instanceof Autor) {
             const sql = `SELECT COUNT(*) as qtd FROM livro l
                 INNER JOIN autor a ON l.autor_codigo = a.autor_codigo
