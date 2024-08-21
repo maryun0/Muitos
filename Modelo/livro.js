@@ -1,76 +1,72 @@
 import LivroDAO from "../Persistencia/livroDAO.js";
-import Autor from "./autor.js";
 
 export default class Livro {
-    
     #codigo;
-    #nome;
-    #data;
-    #qtdeEstoque;
-    #autor;
+    #titulo;
+    #autorId;
+    #dataPublicacao;
+    #numeroPaginas;
 
-    constructor(codigo = 0, nome = '', data = '', qtdeEstoque=0, autor = null) {
+    constructor(codigo = 0, titulo = "", autorId = 0, 
+                dataPublicacao = '', numeroPaginas = 0
+               ) {
         this.#codigo = codigo;
-        this.#nome = nome;
-        this.#data = data;
-        this.#qtdeEstoque = qtdeEstoque;
-        this.#autor = autor;
-    }
-
-    
-    get data() {
-        return this.#data;
-    }
-    set data(novaData) {
-        this.#data = novaData;
-    }
-    get qtdeEstoque() {
-        return this.#qtdeEstoque;
-    }
-    set qtdeEstoque(novaQtdeEstoque) {
-        this.#qtdeEstoque = novaQtdeEstoque;
+        this.#titulo = titulo;
+        this.#autorId = autorId;
+        this.#dataPublicacao = dataPublicacao;
+        this.#numeroPaginas = numeroPaginas;
     }
 
     get codigo() {
         return this.#codigo;
     }
-
     set codigo(novoCodigo) {
         this.#codigo = novoCodigo;
     }
 
-    get nome() {
-        return this.#nome;
+    get titulo() {
+        return this.#titulo;
     }
 
-    set nome(novoNome) {
-        this.#nome = novoNome;
+    set titulo(novoTitulo) {
+        this.#titulo = novoTitulo;
     }
 
-    get autor() {
-        return this.#autor;
+    get autorId() {
+        return this.#autorId;
     }
 
-    set autor(novoAutor) {
-        if (novoAutor instanceof Autor) {
-            this.#autor = novoAutor;
-        } else {
-            throw new Error("O autor deve ser uma instância da classe Autor");
-        }
+    set autorId(novoAutorId) {
+        this.#autorId = novoAutorId;
     }
 
-    
+    get dataPublicacao() {
+        return this.#dataPublicacao;
+    }
+
+    set dataPublicacao(novaData) {
+        this.#dataPublicacao = novaData;
+    }
+
+    get numeroPaginas() {
+        return this.#numeroPaginas;
+    }
+
+    set numeroPaginas(novaQtdPaginas) {
+        this.#numeroPaginas = novaQtdPaginas;
+    }
+
     toJSON() {
         return {
             codigo: this.#codigo,
-            nome: this.#nome,
-            data: this.#data,
-            qtdeEstoque: this.#qtdeEstoque,
-            autor: this.#autor.toJSON() 
-        };
+            titulo: this.#titulo,
+            autorId: this.#autorId,
+            dataPublicacao: this.#dataPublicacao,
+            numeroPaginas: this.#numeroPaginas,
+        }
     }
 
-   
+    // Camada de modelo acessa a camada de persistência
     async gravar() {
         const livroDAO = new LivroDAO();
         await livroDAO.gravar(this);
@@ -81,13 +77,13 @@ export default class Livro {
         await livroDAO.excluir(this);
     }
 
-    async atualizar() {
+    async alterar() {
         const livroDAO = new LivroDAO();
         await livroDAO.atualizar(this);
     }
 
-    async consultar(parametro) {
+    async consultar(termo) {
         const livroDAO = new LivroDAO();
-        return await livroDAO.consultar(parametro);
+        return await livroDAO.consultar(termo);
     }
 }

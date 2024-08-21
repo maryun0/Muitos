@@ -1,18 +1,18 @@
 import AutorDAO from "../Persistencia/autorDAO.js";
 
-export default class Livro {
-    
+export default class Autor {
+    // Definição dos atributos privados
     #codigo;
     #nome;
-    
+    #biografia;
 
-    constructor(codigo = 0, nome = '') {
+    constructor(codigo = 0, nome = '', biografia = '') {
         this.#codigo = codigo;
         this.#nome = nome;
-
+        this.#biografia = biografia;
     }
 
-   
+    // Métodos de acesso públicos
 
     get codigo() {
         return this.#codigo;
@@ -30,17 +30,24 @@ export default class Livro {
         this.#nome = novoNome;
     }
 
-   
+    get biografia() {
+        return this.#biografia;
+    }
 
+    set biografia(novaBiografia) {
+        this.#biografia = novaBiografia;
+    }
+
+    // Override do método toJSON
     toJSON() {
         return {
             codigo: this.#codigo,
             nome: this.#nome,
-
-        };
+            biografia: this.#biografia
+        }
     }
 
-
+    // Camada de modelo acessa a camada de persistência
     async gravar() {
         const autorDAO = new AutorDAO();
         await autorDAO.gravar(this);
@@ -59,9 +66,5 @@ export default class Livro {
     async consultar(parametro) {
         const autorDAO = new AutorDAO();
         return await autorDAO.consultar(parametro);
-    }
-    async possuiLivro() {
-        const autorDAO = new AutorDAO();
-        return await autorDAO.possuiLivro(this);
     }
 }

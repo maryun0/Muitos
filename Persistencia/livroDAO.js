@@ -1,6 +1,5 @@
-import Livro from "../Modelo/livro.js";
-import Autor from "../Modelo/autor.js";
-import conectar from "./conexao.js";
+import Livro from '../Modelo/livro.js';
+import conectar from './conexao.js';
 
 export default class LivroDAO {
 
@@ -10,30 +9,35 @@ export default class LivroDAO {
 
     async init() {
         try {
-            const conexao = await conectar(); 
+            const conexao = await conectar(); //retorna uma conexão
             const sql = `
-                    CREATE TABLE IF NOT EXISTS livro(
-                        livro_codigo INT NOT NULL AUTO_INCREMENT,
-                        livro_nome VARCHAR(100) NOT NULL,
-                        livro_data DATETIME,
-                        livroqtdeestoque INT NOT NULL,
-                        autor_codigo INT NOT NULL,
-                        primary key(livro_codigo),
-                        CONSTRAINT fk_autor FOREIGN KEY (autor_codigo) REFERENCES autor(autor_codigo)
-                    );`;
+            CREATE TABLE IF NOT EXISTS livro(
+                livro_codigo INT NOT NULL AUTO_INCREMENT,
+                livro_titulo VARCHAR(100) NOT NULL,
+                livro_autorId INT NOT NULL,
+                livro_dataPublicacao DATE,
+                livro_numeroPaginas INT NOT NULL,
+                CONSTRAINT pk_livro PRIMARY KEY(livro_codigo),
+                CONSTRAINT fk_autor FOREIGN KEY(livro_autorId) REFERENCES autor(autor_codigo)
+            )
+        `;
             await conexao.execute(sql);
             await conexao.release();
-        } catch (error) {
-            console.error("Erro na inicialização do banco de dados:", error);
+        }
+        catch (e) {
+            console.log("Não foi possível iniciar o banco de dados: " + e.message);
         }
     }
 
     async gravar(livro) {
         if (livro instanceof Livro) {
-            const sql = "INSERT INTO livro(livro_nome, livro_data, livro_qtde_estoque, autor_codigo) VALUES(?, ?, ?, ?)";
-            const parametros = [livro.nome, livro.data, livro.qtdeEstoque, livro.autor.codigo];
+            const sql = `INSERT INTO livro(livro_titulo, livro_autorId,
+                livro_dataPublicacao, livro_numeroPaginas)
+                VALUES(?,?,?,?)`;
+            const parametros = [livro.titulo, livro.autorId, livro.dataPublicacao, livro.numeroPaginas];
+
             const conexao = await conectar();
-            const retorno = await conexao.execute(sql, parametros); 
+            const retorno = await conexao.execute(sql, parametros);
             livro.codigo = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }
@@ -41,8 +45,11 @@ export default class LivroDAO {
 
     async atualizar(livro) {
         if (livro instanceof Livro) {
-            const sql = "UPDATE livro SET livro_nome = ?, livro_data = ?, livroqtdeestoque = ?, autor_codigo = ? WHERE livro_codigo = ?";
-            const parametros = [livro.nome, livro.data, livro.qtdeEstoque, livro.autor.codigo, livro.codigo];
+            const sql = `UPDATE livro SET livro_titulo = ?, livro_autorId = ?,
+            livro_dataPublicacao = ?, livro_numeroPaginas = ?
+            WHERE livro_codigo = ?`;
+            const parametros = [livro.titulo, livro.autorId, livro.dataPublicacao, livro.numeroPaginas, livro.codigo];
+
             const conexao = await conectar();
             await conexao.execute(sql, parametros);
             global.poolConexoes.releaseConnection(conexao);
@@ -51,7 +58,7 @@ export default class LivroDAO {
 
     async excluir(livro) {
         if (livro instanceof Livro) {
-            const sql = "DELETE FROM livro WHERE livro_codigo = ?";
+            const sql = `DELETE FROM livro WHERE livro_codigo = ?`;
             const parametros = [livro.codigo];
             const conexao = await conectar();
             await conexao.execute(sql, parametros);
@@ -60,39 +67,45 @@ export default class LivroDAO {
     }
 
     async consultar(termo) {
-        let sql = '';
-        const conexao = await conectar();
-        let listaLivro = [];
+        if (!termo){
+            termo = "";
+        }
 
+        const conexao = await conectar();
+        let listaLivros = [];
         if (!isNaN(parseInt(termo))) {
-            sql = `
-                SELECT l.livro_codigo, l.livro_nome, l.livro_data, l.livro_qtde_estoque, a.autor_codigo, a.autor_nome
-                FROM livro l
-                INNER JOIN autor a ON l.autor_codigo = a.autor_codigo
-                WHERE l.livro_codigo = ?
-                ORDER BY l.livro_nome`;
+            // Consulta pelo código do livro
+            const sql = `SELECT l.livro_codigo, l.livro_titulo, l.livro_autorId,
+              l.livro_dataPublicacao, l.livro_numeroPaginas
+              FROM livro l 
+              WHERE l.livro_codigo = ?
+              ORDER BY l.livro_titulo               
+            `;
             const parametros = [termo];
             const [registros, campos] = await conexao.execute(sql, parametros);
             for (const registro of registros) {
-                const livro = new Livro(registro.livro_codigo, registro.livro_nome, registro.livro_data, registro.livro_qtde_estoque);
-                listaLivro.push(livro);
+                const livro = new Livro(registro.livro_codigo, registro.livro_titulo,
+                                        registro.livro_autorId, registro.livro_dataPublicacao,
+                                        registro.livro_numeroPaginas);
+                listaLivros.push(livro);
             }
         } else {
-            sql = `
-                SELECT l.livro_codigo, l.livro_nome, l.livro_data, l.livro_qtde_estoque, a.autor_codigo, a.autor_nome
-                FROM livro l
-                INNER JOIN autor a ON l.autor_codigo = a.autor_codigo
-                WHERE l.livro_nome LIKE ? 
-                OR a.autor_nome LIKE ?
-                ORDER BY l.livro_nome`;
+            // Consulta pelo título do livro
+            const sql = `SELECT l.livro_codigo, l.livro_titulo, l.livro_autorId,
+                         l.livro_dataPublicacao, l.livro_numeroPaginas
+                         FROM livro l 
+                         WHERE l.livro_titulo LIKE ?
+                         ORDER BY l.livro_titulo`;
             const parametros = ['%' + termo + '%'];
-            const [registros] = await conexao.execute(sql, parametros);
+            const [registros, campos] = await conexao.execute(sql, parametros);
             for (const registro of registros) {
-                const autor = new Autor(registro.autor_codigo, registro.autor_nome);
-                const livro = new Livro(registro.livro_codigo, registro.livro_nome, registro.livro_data, registro.livro_qtde_estoque, autor);
-                listaLivro.push(livro);
+                const livro = new Livro(registro.livro_codigo, registro.livro_titulo,
+                                        registro.livro_autorId, registro.livro_dataPublicacao,
+                                        registro.livro_numeroPaginas);
+                listaLivros.push(livro);
             }
         }
-        return listaLivro;
+
+        return listaLivros;
     }
 }
