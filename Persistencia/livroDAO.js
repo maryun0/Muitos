@@ -9,7 +9,7 @@ export default class LivroDAO {
 
     async init() {
         try {
-            const conexao = await conectar(); //retorna uma conexão
+            const conexao = await conectar();
             const sql = `
             CREATE TABLE IF NOT EXISTS livro(
                 livro_codigo INT NOT NULL AUTO_INCREMENT,
