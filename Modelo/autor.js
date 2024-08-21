@@ -1,7 +1,7 @@
 import AutorDAO from "../Persistencia/autorDAO.js";
 
 export default class Autor {
-    // Definição dos atributos privados
+    
     #codigo;
     #nome;
     #biografia;
@@ -12,7 +12,7 @@ export default class Autor {
         this.#biografia = biografia;
     }
 
-    // Métodos de acesso públicos
+
 
     get codigo() {
         return this.#codigo;
@@ -38,7 +38,6 @@ export default class Autor {
         this.#biografia = novaBiografia;
     }
 
-    // Override do método toJSON
     toJSON() {
         return {
             codigo: this.#codigo,
@@ -47,7 +46,6 @@ export default class Autor {
         }
     }
 
-    // Camada de modelo acessa a camada de persistência
     async gravar() {
         const autorDAO = new AutorDAO();
         await autorDAO.gravar(this);

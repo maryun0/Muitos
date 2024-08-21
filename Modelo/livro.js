@@ -66,7 +66,6 @@ export default class Livro {
         }
     }
 
-    // Camada de modelo acessa a camada de persistência
     async gravar() {
         const livroDAO = new LivroDAO();
         await livroDAO.gravar(this);

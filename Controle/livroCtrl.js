@@ -13,7 +13,6 @@ export default class LivroCtrl {
 
             if (titulo && autorId && dataPublicacao && numeroPaginas > 0) {
                 const livro = new Livro(0, titulo, autorId, dataPublicacao, numeroPaginas);
-                //resolver a promise
                 livro.gravar().then(() => {
                     resposta.status(200).json({
                         "status": true,
@@ -55,7 +54,7 @@ export default class LivroCtrl {
 
             if (codigo && titulo && autorId && dataPublicacao && numeroPaginas > 0) {
                 const livro = new Livro(codigo, titulo, autorId, dataPublicacao, numeroPaginas);
-                //resolver a promise
+    
                 livro.atualizar().then(() => {
                     resposta.status(200).json({
                         "status": true,
@@ -91,7 +90,6 @@ export default class LivroCtrl {
             const codigo = dados.codigo;
             if (codigo) {
                 const livro = new Livro(codigo);
-                //resolver a promise
                 livro.excluir().then(() => {
                     resposta.status(200).json({
                         "status": true,
@@ -122,8 +120,6 @@ export default class LivroCtrl {
 
     consultar(requisicao, resposta) {
         resposta.type('application/json');
-        //express, por meio do controle de rotas, será
-        //preparado para esperar um termo de busca
         let termo = requisicao.params.termo;
         if (!termo) {
             termo = "";

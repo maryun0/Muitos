@@ -51,14 +51,10 @@ export default class AutorDAO {
             const conexao = await conectar();
 
             try {
-                // Excluir os livros associados ao autor
                 const sqlLivros = `DELETE FROM livro WHERE livro_autorId = ?`;
                 await conexao.execute(sqlLivros, [autor.codigo]);
-
-                // Excluir o autor
                 const sqlAutor = `DELETE FROM autor WHERE autor_codigo = ?`;
                 await conexao.execute(sqlAutor, [autor.codigo]);
-
                 console.log("Autor e seus livros associados foram excluídos com sucesso.");
             } catch (erro) {
                 console.error("Erro ao excluir o autor e seus livros: " + erro.message);

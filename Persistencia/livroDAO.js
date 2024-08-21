@@ -74,7 +74,6 @@ export default class LivroDAO {
         const conexao = await conectar();
         let listaLivros = [];
         if (!isNaN(parseInt(termo))) {
-            // Consulta pelo código do livro
             const sql = `SELECT l.livro_codigo, l.livro_titulo, l.livro_autorId,
               l.livro_dataPublicacao, l.livro_numeroPaginas
               FROM livro l 
@@ -90,7 +89,6 @@ export default class LivroDAO {
                 listaLivros.push(livro);
             }
         } else {
-            // Consulta pelo título do livro
             const sql = `SELECT l.livro_codigo, l.livro_titulo, l.livro_autorId,
                          l.livro_dataPublicacao, l.livro_numeroPaginas
                          FROM livro l 
