@@ -7,9 +7,7 @@ export default class Livro {
     #dataPublicacao;
     #numeroPaginas;
 
-    constructor(codigo = 0, titulo = "", autorId = 0, 
-                dataPublicacao = '', numeroPaginas = 0
-               ) {
+    constructor(codigo = 0, titulo = "", autorId = 0, dataPublicacao = '', numeroPaginas = 0) {
         this.#codigo = codigo;
         this.#titulo = titulo;
         this.#autorId = autorId;
@@ -20,6 +18,7 @@ export default class Livro {
     get codigo() {
         return this.#codigo;
     }
+
     set codigo(novoCodigo) {
         this.#codigo = novoCodigo;
     }
@@ -44,8 +43,8 @@ export default class Livro {
         return this.#dataPublicacao;
     }
 
-    set dataPublicacao(novaData) {
-        this.#dataPublicacao = novaData;
+    set dataPublicacao(novaDataPublicacao) {
+        this.#dataPublicacao = novaDataPublicacao;
     }
 
     get numeroPaginas() {
@@ -62,8 +61,8 @@ export default class Livro {
             titulo: this.#titulo,
             autorId: this.#autorId,
             dataPublicacao: this.#dataPublicacao,
-            numeroPaginas: this.#numeroPaginas,
-        }
+            numeroPaginas: this.#numeroPaginas
+        };
     }
 
     async gravar() {
@@ -71,14 +70,14 @@ export default class Livro {
         await livroDAO.gravar(this);
     }
 
+    async atualizar() {
+        const livroDAO = new LivroDAO();
+        await livroDAO.atualizar(this);
+    }
+
     async excluir() {
         const livroDAO = new LivroDAO();
         await livroDAO.excluir(this);
-    }
-
-    async alterar() {
-        const livroDAO = new LivroDAO();
-        await livroDAO.atualizar(this);
     }
 
     async consultar(termo) {
