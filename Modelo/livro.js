@@ -1,16 +1,15 @@
 import LivroDAO from "../Persistencia/livroDAO.js";
+import AutorLivroDAO from "../Persistencia/autorLivroDAO.js";
 
 export default class Livro {
     #codigo;
     #titulo;
-    #autorId;
     #dataPublicacao;
     #numeroPaginas;
 
-    constructor(codigo = 0, titulo = "", autorId = 0, dataPublicacao = '', numeroPaginas = 0) {
+    constructor(codigo = 0, titulo = "", dataPublicacao = '', numeroPaginas = 0) {
         this.#codigo = codigo;
         this.#titulo = titulo;
-        this.#autorId = autorId;
         this.#dataPublicacao = dataPublicacao;
         this.#numeroPaginas = numeroPaginas;
     }
@@ -29,14 +28,6 @@ export default class Livro {
 
     set titulo(novoTitulo) {
         this.#titulo = novoTitulo;
-    }
-
-    get autorId() {
-        return this.#autorId;
-    }
-
-    set autorId(novoAutorId) {
-        this.#autorId = novoAutorId;
     }
 
     get dataPublicacao() {
@@ -59,7 +50,6 @@ export default class Livro {
         return {
             codigo: this.#codigo,
             titulo: this.#titulo,
-            autorId: this.#autorId,
             dataPublicacao: this.#dataPublicacao,
             numeroPaginas: this.#numeroPaginas
         };
@@ -83,5 +73,10 @@ export default class Livro {
     async consultar(termo) {
         const livroDAO = new LivroDAO();
         return await livroDAO.consultar(termo);
+    }
+
+    async adicionarAutor(autor) {
+        const autorLivroDAO = new AutorLivroDAO();
+        await autorLivroDAO.adicionarAutorLivro(autor.codigo, this.codigo);
     }
 }

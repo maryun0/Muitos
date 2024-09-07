@@ -1,7 +1,7 @@
 import AutorDAO from "../Persistencia/autorDAO.js";
+import AutorLivroDAO from "../Persistencia/autorLivroDAO.js";
 
 export default class Autor {
-    
     #codigo;
     #nome;
     #biografia;
@@ -11,8 +11,6 @@ export default class Autor {
         this.#nome = nome;
         this.#biografia = biografia;
     }
-
-
 
     get codigo() {
         return this.#codigo;
@@ -43,7 +41,7 @@ export default class Autor {
             codigo: this.#codigo,
             nome: this.#nome,
             biografia: this.#biografia
-        }
+        };
     }
 
     async gravar() {
@@ -64,5 +62,10 @@ export default class Autor {
     async consultar(parametro) {
         const autorDAO = new AutorDAO();
         return await autorDAO.consultar(parametro);
+    }
+
+    async adicionarLivro(livro) {
+        const autorLivroDAO = new AutorLivroDAO();
+        await autorLivroDAO.adicionarAutorLivro(this.codigo, livro.codigo);
     }
 }
