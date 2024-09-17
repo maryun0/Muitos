@@ -1,16 +1,16 @@
 import AutorDAO from "../Persistencia/autorDAO.js";
-import AutorLivroDAO from "../Persistencia/autorLivroDAO.js";
+
 
 export default class Autor {
+
     #codigo;
     #nome;
-    #biografia;
 
-    constructor(codigo = 0, nome = '', biografia = '') {
+    constructor(codigo = 0, nome = '') {
         this.#codigo = codigo;
         this.#nome = nome;
-        this.#biografia = biografia;
     }
+
 
     get codigo() {
         return this.#codigo;
@@ -28,19 +28,11 @@ export default class Autor {
         this.#nome = novoNome;
     }
 
-    get biografia() {
-        return this.#biografia;
-    }
-
-    set biografia(novaBiografia) {
-        this.#biografia = novaBiografia;
-    }
 
     toJSON() {
         return {
             codigo: this.#codigo,
-            nome: this.#nome,
-            biografia: this.#biografia
+            nome: this.#nome
         };
     }
 
@@ -64,8 +56,8 @@ export default class Autor {
         return await autorDAO.consultar(parametro);
     }
 
-    async adicionarLivro(livro) {
-        const autorLivroDAO = new AutorLivroDAO();
-        await autorLivroDAO.adicionarAutorLivro(this.codigo, livro.codigo);
+    async possuiLivros() {
+        const autorDAO = new AutorDAO();
+        return await autorDAO.possuiLivros(this);
     }
 }

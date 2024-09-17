@@ -2,32 +2,40 @@ import express from 'express';
 import cors from 'cors';
 import rotaAutor from './Rotas/rotaAutor.js';
 import rotaLivro from './Rotas/rotaLivro.js';
-import rotaAutorLivro from './Rotas/rotaAutorLivro.js'; 
 import session from 'express-session';
 import dotenv from 'dotenv';
 import rotaAutenticacao from './Rotas/rotaAutenticacao.js';
 import { verificarAutenticacao } from './Seguranca/autenticar.js';
 
-dotenv.config();    
-const host = 'localhost';
-const porta = 3000;
+dotenv.config(); 
+
+const host = '0.0.0.0';
+const porta = 4000;
 
 const app = express();
+
 app.use(session({
     secret: process.env.CHAVE_SECRETA,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 15 }
+    resave: true, 
+    saveUninitialized: true, 
+    cookie: {
+        httpOnly: false,
+        secure: false,
+        sameSite: false,
+        maxAge: 1000 * 60 * 15 
+    }
 }));
 
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "http://192.168.10.152:3000"],
+}));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
 app.use('/autor', verificarAutenticacao, rotaAutor);
 app.use('/livro', verificarAutenticacao, rotaLivro);
-app.use('/autorlivro', verificarAutenticacao, rotaAutorLivro); 
 app.use('/autenticacao', rotaAutenticacao);
 
 app.listen(porta, host, () => {

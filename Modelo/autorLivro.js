@@ -1,29 +1,34 @@
-import AutorLivroDAO from '../Persistencia/autorLivroDAO.js'; // Certifique-se de que o caminho está correto
-
 export default class AutorLivro {
-    #autorCodigo;
-    #livroCodigo;
-
-    constructor(autorCodigo, livroCodigo) {
-        this.#autorCodigo = autorCodigo;
-        this.#livroCodigo = livroCodigo;
+    #autor;
+    #livro;
+    
+    constructor(autor, livro) {
+        this.#autor = autor;
+        this.#livro = livro;
     }
 
-    get autorCodigo() {
-        return this.#autorCodigo;
+   
+    get autor() {
+        return this.#autor;
     }
 
-    get livroCodigo() {
-        return this.#livroCodigo;
+    set autor(novoAutor) {
+        this.#autor = novoAutor;
     }
 
-    async associar() {
-        const autorLivroDAO = new AutorLivroDAO();
-        await autorLivroDAO.adicionarAutorLivro(this.#autorCodigo, this.#livroCodigo);
+    get livro() {
+        return this.#livro;
     }
 
-    async desassociar() {
-        const autorLivroDAO = new AutorLivroDAO();
-        await autorLivroDAO.removerAutorLivro(this.#autorCodigo, this.#livroCodigo);
+    set livro(novoLivro) {
+        this.#livro = novoLivro;
+    }
+
+ 
+    toJSON() {
+        return {
+            'autor': this.#autor,
+            'livro': this.#livro
+        };
     }
 }
